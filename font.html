@@ -1,0 +1,234 @@
+<!--Всем привет от создателя (Влада)-->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+   <meta charset="UTF-8">
+   <meta name="author" content="Villager0090818">
+   <title>Helper</title>
+<style>
+    
+     :root
+     {
+          --hd--color:rgba(105,105,105,0.5);
+          --bg--gradient:
+               linear-gradient(135deg,#aaa,#222);
+     }
+
+     body
+     {
+	  font-family:Tahoma;
+          color:#fff;
+          min-height:100vh;
+          margin:0;
+          top:0;
+          background-image:var(--bg--gradient);
+     }
+
+     sidebar
+     {
+	  max-width:10%;
+          color:#555;
+          position:fixed;
+          font-family:sans-serif;
+          flex-wrap:wrap;
+          background-color:var(--hd--color);
+          height:100%;
+          left:0;
+          min-width:10%;
+          font-size:30px;
+          display:flex;
+          flex-direction:column;
+          text-align:center;
+          box-sizing:border-box;
+          gap:5%;
+          padding:1%;
+          backdrop-filter:blur(10px); 
+          overflow-y: auto;
+     }
+
+     sidebar > a
+     {
+	  color:#555;
+          text-decoration:none;
+     }
+
+     main
+     {
+          top:30px;
+          border-radius:10px;
+          border:2px var(--hd--color) solid;
+          width:80%;
+          text-indent:30px;
+          position:absolute;
+          left:15%;
+          font-size:30px;
+          backdrop-filter:blur(10px);
+     }
+
+     main > h1
+     {
+          text-align:center;
+     }
+
+
+     #now
+     {
+          color:#fff;
+          text-shadow:0 0 10px #fff;
+     }
+
+
+     .copy
+     {
+          width:20px;
+          height:20px;
+          background-color:white;
+          border:1px black solid; 
+          border-radius:50%;    
+          position:relative;
+          transition: transform 1s;
+     }
+
+     .copy::after
+     {    
+          content:""; 
+          top:15%;
+          left:20%;
+          width:35%;
+          height:50%;
+          position:absolute;
+          background-color:#fff;
+          border:1px #111 solid;
+          box-shadow:2px 2px black;
+     }
+
+     .copy:focus::before
+     {
+          opacity:0;
+          transition:all 1s;
+          position:absolute;
+          color:#fff;
+          content:"Copy";
+          background-color:#000;
+          width:250%;
+          height:100%;
+          left:60%;
+          top:-1px;
+          z-index:-1;
+          border-radius:0 10px 10px 0;
+          border:1px black solid;
+          animation:show 1s forwards;
+     }
+
+
+
+     @keyframes show
+     {
+          0%{opacity:0;}
+          100%{opacity:0.3;}
+     }
+
+
+ 
+</style>
+
+</head>
+<body>
+
+
+<sidebar>
+     <a id="now" href="index.html">Шрифты</a>
+     <a href="border.html">Бордер - радиусы</a>
+</sidebar>
+
+
+<main>
+     <h1>Список шрифтов CSS</h1>
+     <hr>
+     <ul>
+          <li style="font-family:Times New Roman;" class="font-li" data-font="Times New Roman">
+               Times New Roman - Стандартный 
+          </li>
+
+
+          <li style="font-family:impact;"  class="font-li" data-font="Impact">
+               Impact - Выделяющий
+          </li>
+
+
+          <li style="font-family:Sans-serif;"  class="font-li" data-font="Sans-serif">
+               Sans-serif - Аккуратный
+          </li>
+
+
+          <li style="font-family:Calibri;"  class="font-li" data-font="Arial">
+               Calibri - Округляющий
+
+          </li>
+
+
+          <li style="font-family:Arial;"  class="font-li" data-font="Times New Roman">
+               Arial - Обыденный
+          </li>
+
+
+          <li style="font-family:Georgia;"  class="font-li" data-font="Georgia">
+               Georgia - Утончённый
+          </li>
+
+
+          <li style="font-family:Consolas;"  class="font-li" data-font="Consolas">
+               Consolas - Древний
+          </li>
+
+
+          <li style="font-family:Tahoma;"  class="font-li" data-font="Tahoma">
+               Tahoma - Умиротворяющий
+          </li>
+
+
+          <li style="font-family:Garamond;"  class="font-li" data-font="Garamond">
+               Garamond - Расширяющий
+          </li>
+
+     </ul>
+<main>
+
+
+
+ 
+<script>
+
+     const allLiFont = document.querySelectorAll('.font-li');
+
+
+     addButtonCopy();
+
+
+     function addButtonCopy()
+     {
+
+          allLiFont.forEach(nowItem => {
+               const butCopy = document.createElement('button');
+               butCopy.dataset.font = nowItem.dataset.font;
+               butCopy.className = "copy";
+               butCopy.textContent = "";
+               nowItem.appendChild(butCopy);
+          });
+     }
+
+
+
+
+     document.addEventListener('click',(e)=>
+     {
+          const element = e.target;
+          if (element.className === "copy") navigator.clipboard.writeText("font-family:" + element.dataset.font + ";");
+     });
+
+
+
+</script>
+
+</body>
+</html>

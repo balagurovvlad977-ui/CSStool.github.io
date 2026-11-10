@@ -1,0 +1,341 @@
+<!--Всем привет от создателя (Влада)-->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+   <meta charset="UTF-8">
+   <meta name="author" content="Villager0090818">
+   <title>Helper</title>
+<style>
+    
+     :root
+     {
+          --hd--color:rgba(105,105,105,0.5);
+          --bg--gradient:
+               linear-gradient(135deg,#aaa,#222);
+     }
+
+     body
+     {
+          font-family:Tahoma;
+          color:#fff;
+          min-height:100vh;
+          margin:0;
+          top:0;
+          background-image:var(--bg--gradient);
+     }
+
+     sidebar
+     {
+	  max-width:10%;
+          color:#555;
+          position:fixed;
+          font-family:sans-serif;
+          flex-wrap:wrap;
+          background-color:var(--hd--color);
+          height:100%;
+          left:0;
+          min-width:10%;
+          font-size:30px;
+          display:flex;
+          flex-direction:column;
+          text-align:center;
+          box-sizing:border-box;
+          gap:5%;
+          padding:1%;
+          backdrop-filter:blur(10px); 
+          overflow-y: auto;
+     }
+
+     sidebar > a
+     {
+	  color:#555;
+          text-decoration:none;
+     }
+
+     main
+     {
+          top:30px;
+          border-radius:10px;
+          border:2px var(--hd--color) solid;
+          width:80%;
+          position:absolute;
+          left:15%;
+          font-size:30px;
+          backdrop-filter:blur(10px);
+          box-sizing:border-box;
+          padding:10px;
+     }
+
+     main > p
+     {
+          text-indent:30px;
+     }
+
+     main > h1
+     {
+          text-align:center;
+     }
+
+
+     #now
+     {
+          color:#fff;
+          text-shadow:0 0 10px #fff;
+     }
+
+
+
+
+
+
+     .copy
+     {
+          padding:10px;
+          border-radius:10px;
+          border:3px inset black;
+          width:max-content;
+          background-color:#666;
+
+          z-index:9;
+          width:30px;
+          height:30px;
+          border-left:none;  
+          position:relative;
+          transition: transform 1s;
+     }
+
+     .copy::after
+     {    
+          content:""; 
+          top:15%;
+          left:20%;
+          width:35%;
+          height:50%;
+          position:absolute;
+          background-color:#fff;
+          border:1px #111 solid;
+          box-shadow:2px 2px black;
+     }
+
+     .copy:focus::before
+     {
+          opacity:0;
+          transition:all 1s;
+          position:absolute;
+          color:#fff;
+          content:"Copy";
+          background-color:#000;
+          width:250%;
+          height:100%;
+          left:60%;
+          top:-1px;
+          z-index:-1;
+          border-radius:0 10px 10px 0;
+          border:1px black solid;
+          animation:show 1s forwards;
+     }
+
+     @keyframes show
+     {
+          0%{opacity:0;}
+          100%{opacity:0.3;}
+     }
+
+
+
+
+
+
+
+     #inputs
+     {
+          box-sizing:border-box;
+          padding-left:15px;
+     }
+
+
+     .border-input-num
+     {
+          border-radius:10px;
+          background-color:rgba(100,100,100,0.5);
+          width:38px;
+          color:#fff;
+     }
+
+
+     .border-input
+     {
+          -webkit-appearance:none;
+          height:5px;
+          background-color:#444;
+          border-radius:25px;
+          box-shadow:inset -1px -1px 1px 0px #222;
+     }
+
+
+     .border-input::-webkit-slider-thumb
+     {
+          -webkit-appearance:none;
+          width:20px;
+          height:20px;
+          border-radius:50%;
+          background-color:#222;
+          box-shadow:inset -1px -1px 2px 0px #555;
+     }
+
+     
+     #content
+     {
+          display:flex;
+          flex-directon:raw;
+          justify-content:space-between;;
+     }
+     
+
+     #box
+     {
+          box-shadow:inset -1px -1px 20px 0px #555;
+          width:200px;
+          height:200px;
+          background-color:black;
+     }
+
+
+     #code
+     {
+          font-size:30px;
+          font-family:Consolas;
+          padding:10px;
+          border-radius:10px;
+          border:3px inset black;
+          width:max-content;
+          background-color:#666;
+     }
+
+
+     #random
+     {
+
+          border-radius:50px;
+          background-color:#777;
+          font-size:20px;
+          color:#fff;
+     }
+
+
+ 
+
+ 
+</style>
+
+</head>
+<body>
+
+
+<sidebar>
+     <a href="index.html">Шрифты</a>
+     <a id="now" href="border.html">Бордер - радиусы</a>
+</sidebar>
+
+
+
+<main>
+     <h1>Бордер - Радиус</h1>
+     <hr>
+     <p> Можете двигать ползунки и выбирать настройки которые вам по душе.</p>
+     
+     <div id="content">
+          <div id="inputs">
+               <text>Левый верхний угол</text>
+               <input class="border-input" type="range" min="0" max="100" value="0" id="x1" oninput="box.style.borderTopLeftRadius = this.value + '%';x1Show.value = this.value">
+               <input class="border-input-num" type="number" min="0" max="100" value="0" id="x1Show" oninput="box.style.borderTopLeftRadius = this.value + '%';x1.value = this.value">
+               <br>
+               <text>Правый верхний угол</text>
+               <input class="border-input" type="range" min="0" max="100" value="0" id="x2" oninput="box.style.borderTopRightRadius = this.value + '%';x2Show.value = this.value">
+               <input class="border-input-num" type="number" min="0" max="100" value="0" id="x2Show" oninput="box.style.borderTopRightRadius = this.value + '%';x2.value = this.value">
+               <br>
+               <text>Левый нижний угол</text>
+               <input class="border-input" type="range" min="0" max="100" value="0" id="x3" oninput="box.style.borderBottomLeftRadius = this.value + '%';x3Show.value = this.value">
+               <input class="border-input-num" type="number" min="0" max="100" value="0" id="x3Show" oninput="box.style.borderBottomLeftRadius = this.value + '%';x3.value = this.value">
+               <br>
+               <text>Правый нижний угол</text>
+               <input class="border-input" type="range" min="0" max="100" value="0" id="x4" oninput="box.style.borderBottomRightRadius = this.value + '%';x4Show.value = this.value">
+               <input class="border-input-num" type="number" min="0" max="100" value="0" id="x4Show" oninput="box.style.borderBottomRightRadius = this.value + '%';x4.value = this.value">
+         </div>
+          
+          <div id="box"></div>
+     </div>
+     
+     <button onclick="generateRandomBorder();" id="random">Выставить случайные величины</button>
+     <br>
+     <br>
+     <text id="code">border-radius:0% 0% 0% 0%;</text>
+     <button class="copy" onclick="copy();"></button>
+     
+     
+
+
+<main>
+
+
+
+
+<script>
+
+
+     const code = document.getElementById('code');
+     
+     const box = document.getElementById('box');
+
+     document.addEventListener('input',()=>{
+          let x1 = box.style.borderTopLeftRadius;
+          let x2 = box.style.borderTopRightRadius;
+          let x3 = box.style.borderBottomLeftRadius;
+          let x4 = box.style.borderBottomRightRadius;
+          
+          x1 = x1 || 0 + "%";
+          x2 = x2 || 0 + "%";
+          x3 = x3 || 0 + "%";
+          x4 = x4 || 0 + "%";
+          code.textContent = `border-radius: ${x1} ${x2} ${x3} ${x4};`; 
+     });
+
+
+     function copy()
+     {
+          navigator.clipboard.writeText(code.textContent);
+     }
+
+
+     function generateRandomBorder() 
+     {
+    
+          const x1 = Math.floor(Math.random() * 101);
+          const x2 = Math.floor(Math.random() * 101);
+          const x3 = Math.floor(Math.random() * 101);
+          const x4 = Math.floor(Math.random() * 101);
+
+          document.getElementById('x1').value = x1;
+          document.getElementById('x2').value = x2;
+          document.getElementById('x3').value = x3;
+          document.getElementById('x4').value = x4;
+
+          document.getElementById('x1Show').value = x1;
+          document.getElementById('x2Show').value = x2;
+          document.getElementById('x3Show').value = x3;
+          document.getElementById('x4Show').value = x4;
+
+
+          box.style.borderRadius = `${x1}% ${x2}% ${x3}% ${x4}%`;
+
+
+          code.textContent = `border-radius: ${x1}% ${x2}% ${x3}% ${x4}%;`;
+     }
+
+
+
+
+</script>
+
+</body>
+</html>

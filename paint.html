@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+   <meta charset="UTF-8">
+   <meta name="author" content="Villager0090818">
+   <title>Helper</title>
+<style>
+    
+     :root
+     {
+          --hd--color:rgba(105,105,105,0.5);
+          --bg--gradient:
+               linear-gradient(135deg,#aaa,#222);
+          --size--line: "5";
+          --distance--line: "5";
+          --alpha: "100";
+     }
+
+     body
+     {
+          font-family:Tahoma;
+          color:#fff;
+          min-height:100vh;
+          margin:0;
+          top:0;
+          background-image:var(--bg--gradient);
+     } 
+
+     sidebar
+     {
+	  max-width:10%;
+          color:#555;
+          position:fixed;
+          font-family:sans-serif;
+          flex-wrap:wrap;
+          background-color:var(--hd--color);
+          height:100%;
+          left:0;
+          min-width:10%;
+          font-size:30px;
+          display:flex;
+          flex-direction:column;
+          text-align:center;
+          box-sizing:border-box;
+          gap:5%;
+          padding:1%;
+          backdrop-filter:blur(10px); 
+          overflow-y: auto;
+     }
+
+     sidebar > a
+     {
+	  color:#555;
+          text-decoration:none;
+     }
+
+     main
+     {
+          top:30px;
+          border-radius:10px;
+          border:2px var(--hd--color) solid;
+          width:80%;
+          position:absolute;
+          left:15%;
+          font-size:30px;
+          backdrop-filter:blur(10px);
+          box-sizing:border-box;
+          padding:10px;
+     }
+
+     main > p
+     {
+          text-indent:30px;
+     }
+
+     main > h1
+     {
+          text-align:center;
+     }
+
+
+     #now
+     {
+          color:#fff;
+          text-shadow:0 0 10px #fff;
+     }
+
+
+
+
+
+
+     .copy
+     {
+          padding:10px;
+          border-radius:10px;
+          border:3px inset black;
+          width:max-content;
+          background-color:#666;
+
+          z-index:9;
+          width:30px;
+          height:30px;
+          border-left:none;  
+          position:relative;
+          transition: transform 1s;
+     }
+
+     .copy::after
+     {    
+          content:""; 
+          top:15%;
+          left:20%;
+          width:35%;
+          height:50%;
+          position:absolute;
+          background-color:#fff;
+          border:1px #111 solid;
+          box-shadow:2px 2px black;
+     }
+
+     .copy:focus::before
+     {
+          opacity:0;
+          transition:all 1s;
+          position:absolute;
+          color:#fff;
+          content:"Copy";
+          background-color:#000;
+          width:250%;
+          height:100%;
+          left:60%;
+          top:-1px;
+          z-index:-1;
+          border-radius:0 10px 10px 0;
+          border:1px black solid;
+          animation:show 1s forwards;
+     }
+
+     @keyframes show
+     {
+          0%{opacity:0;}
+          100%{opacity:0.3;}
+     }
+
+     #content
+     {
+          display:flex;
+          gap:40px;
+          flex-direction:raw;
+          justify-content:space-between;
+     }
+
+
+
+
+
+     #paint
+     {
+          position:relative;
+          border: 1px solid black;
+          background-color:white;
+     }
+
+     #color
+     {
+          width:100px;
+          height:100px;
+     }
+
+     #panel
+     {
+          display:flex;
+          width:15vw;
+          flex-wrap:wrap;
+          justify-content:center;
+          gap:5px;
+          box-sizing:border-box;
+          padding:10px;
+          min-height:15vh;
+          background-color:#888;
+          border-radius:10px;
+     }
+
+     .panel-button
+     {
+          background-color:#888;
+          border:3px inset black;
+          min-width:40px;
+          height:40px;
+          border-radius:10px;
+     }
+
+
+     #sizeLine
+     {
+          -webkit-appearance:none;
+          background-color:gray;
+          border-radius:1px;
+          height:3px;
+          width:200px;
+          position:relative;
+     }
+
+     #sizeLine::after
+     {
+          position:absolute;
+          content: "Размер линии : " var(--size--line);
+          color:#fff;
+          left:25%;
+     }
+
+
+     #distanceLine
+     {
+          -webkit-appearance:none;
+          background-color:gray;
+          border-radius:1px;
+          height:3px;
+          width:200px;
+          position:relative;
+     }
+
+     #distanceLine::after
+     {
+          position:absolute;
+          content: "Размер сетки : " var(--distance--line);
+          color:#fff;
+          left:25%;
+     }
+
+
+
+
+
+     #alpha
+     {
+          -webkit-appearance:none;
+          background-color:gray;
+          border-radius:1px;
+          height:3px;
+          width:200px;
+          position:relative;
+     }
+
+     #alpha::after
+     {
+          position:absolute;
+          content: "Прозрачность  : " var(--alpha);
+          color:#fff;
+          left:25%;
+     }
+
+
+
+
+
+     #invisibleFirst
+     {
+          top:0;
+          left:0;
+          position:absolute;
+          pointer-events:none;
+     }
+
+     #invisibleTwo
+     {
+          top:0;
+          left:0;
+          position:absolute;
+          pointer-events:none;
+     }
+
+     #plan
+     {
+          position:relative;
+     }
+
+
+ 
+
+ 
+</style>
+
+</head>
+<body>
+
+
+<sidebar>
+     <a href="index.html">Шрифты</a>
+     <a href="border.html">Бордер - радиусы</a>
+     <a id="now" href="paint.html">Пеинт</a>
+</sidebar>
+
+
+
+<main>
+ 
+<h1>Пэинт на минмиалках</h1>
+<div id="content">
+     <input id="color" type="color"/>
+
+     <div id="plan">
+          <canvas id="paint" width="400" height="400">
+               Поле не зарузилось...
+          </canvas>
+          <canvas id="invisibleFirst" width="400" height="400"></canvas>
+          <canvas id="invisibleTwo" width="400" height="400"></canvas>
+     </div>
+
+     <div id="panel">
+          <button class="panel-button" data-type="lastik" onclick="cleaner = !cleaner;
+this.style.backgroundColor = cleaner ? '#555' : '#888';">
+               🧽🧽
+          </button>
+
+          <button class="panel-button" data-type="line" onclick="lineType = !lineType;
+this.style.backgroundColor = lineType ? '#555' : '#888';">
+               ||
+          </button>
+
+          <button class="panel-button" data-type="line" onclick="typeFill = !typeFill;
+this.style.backgroundColor = typeFill ? '#555' : '#888';">
+               🪣🪣
+          </button>
+     
+          <input type="range" min="1" max="500" value="5" id="sizeLine" oninput="sizeBrush = this.value;document.documentElement.style.setProperty('--size--line','\'' + this.value + '\'');"/>
+
+          <input type="range" min="1" max="500" value="5" id="distanceLine" oninput="distance = this.value;document.documentElement.style.setProperty('--distance--line','\'' + this.value + '\'');if(lattice)createLattice(ctxIvTwo);"/>
+
+          <input type="range" min="0" max="100" value="100" id="alpha" oninput="alpha = this.value / 100;document.documentElement.style.setProperty('--alpha','\'' + this.value + '\'');"/>
+
+
+          <button class="panel-button" data-type="line" onclick="squareType = !squareType;
+this.style.backgroundColor = squareType ? '#555' : '#888';">
+               🟫🟦
+          </button>
+
+          <button class="panel-button" data-type="line" onclick="circleType = !circleType;
+this.style.backgroundColor = circleType ? '#555' : '#888';">
+               🔴
+          </button>
+
+          <button class="panel-button" data-type="line" onclick="
+               if(typeCircle === 'empty') typeCircle = 'filled';
+               else typeCircle = 'empty';
+               this.textContent = (typeCircle === 'empty') ? 'тип окр. - ⭕' : 'тип окр. - 🔴';
+               ">
+               тип окр. - 🔴
+          </button>
+
+
+          <button class="panel-button" style="background-color:#f00" data-type="line" onclick="traceMode = !traceMode;
+this.style.backgroundColor = traceMode ? '#0f0' : '#f00';">
+               Режим луча
+          </button>
+
+          <button class="panel-button" data-type="line" onclick="
+               lattice = !lattice;
+               this.style.backgroundColor = lattice ? '#555' : '#888';
+               if(lattice)createLattice(ctxIvTwo);
+               else clearCTX(ctxIvTwo);
+               ">
+               ##
+          </button>
+
+
+     </div>
+</div>
+
+
+</main>
+
+
+
+
+<script>
+
+     const canvas = document.getElementById('paint');
+     const colorInput = document.getElementById('color');
+     const canvasInvisible = document.getElementById('invisibleFirst');
+     const canvasInvisibleTwo = document.getElementById('invisibleTwo');
+
+     const ctxIvTwo = canvasInvisibleTwo.getContext('2d');
+     const ctxIv = canvasInvisible.getContext('2d');
+     const ctx = canvas.getContext('2d');
+
+     let lineXStart = 0;
+     let lineYStart = 0;
+
+     let alpha = 1;
+
+     let typeCircle = "filled";
+
+     let distance = 5;
+     let lattice = false;
+
+     let traceMode = false;
+
+     let circleType = false;
+     let squareType = false;
+     let typeFill = false;
+     let lineType = false;
+     let cleaner = false;
+
+     let isDrawing = false;
+     let colorBrush = '#000';
+     let sizeBrush = 5;
+     let cap = "round";
+
+
+     function draw(x,y,size,color,cap)
+     {
+          if (!isDrawing) return;
+	  ctx.globalAlpha = alpha;
+          ctx.lineWidth = size;
+          ctx.strokeStyle = color;
+          ctx.lineTo(x, y);
+          ctx.lineCap = cap;
+          ctx.stroke();
+     }
+
+
+     function drawLine(ctx,x1,y1,x2,y2,size,color,cap)
+     {
+          ctx.beginPath();
+	  ctx.globalAlpha = alpha;
+          ctx.lineWidth = size;
+          ctx.strokeStyle = color;
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(x2, y2);
+          ctx.lineCap = cap;
+          ctx.stroke();
+     }
+
+
+     function drawSquare(ctx,x1,y1,x2,y2,color)
+     {
+          ctx.beginPath();
+	  ctx.globalAlpha = alpha;
+          ctx.fillStyle = color;
+          ctx.fillRect(x1,y1,x2 - x1,y2 - y1); 
+     }
+
+
+     function clearCTX(ctx)
+     {
+          ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
+     }
+
+
+     function clearRect(x,y,size)
+     {
+          if(!isDrawing)return;
+          ctx.clearRect(x - size / 2,y - size/2,size,size);
+     }
+
+
+
+     function fill(xStart,yStart,color)
+     {
+          const imageData = ctx.getImageData(0,0,canvas.width,canvas.height);
+          const pixels = imageData.data;
+
+          xStart = Math.floor(xStart);
+          yStart = Math.floor(yStart);
+
+          const width = canvas.width;
+          const height = canvas.height;
+          
+          const massiv = [[xStart,yStart]];
+          const rStart = pixels[(yStart * width + xStart) * 4];
+          const gStart = pixels[(yStart * width + xStart) * 4 + 1];
+          const bStart = pixels[(yStart * width + xStart) * 4 + 2];
+          const aStart = pixels[(yStart * width + xStart) * 4 + 3];
+     
+          const hex = parseInt(color.slice(1), 16);
+
+          const newA = 255;
+          const newR = hex >> 16;
+          const newG = (hex >> 8) & 0xff;
+          const newB = hex & 0xff;
+          if (rStart === newR && gStart === newG && bStart === newB && aStart === newA) return;
+
+          function step()
+          {
+               let count = 0;
+               while (massiv.length > 0 && count < 800)
+               {
+                    const [x,y] = massiv.pop();
+                    if(x < 0 || x >= width || y < 0 || y >= height) continue;
+               
+                    const i = (y * width + x) * 4;
+                    const r = pixels[i];
+                    const g = pixels[i + 1];
+                    const b = pixels[i + 2];
+                    const a = pixels[i + 3];
+               
+                    if(r !== rStart || g !== gStart || b !== bStart || a !== aStart)continue;
+
+                    pixels[i] = newR;
+                    pixels[i + 1] = newG;
+                    pixels[i + 2] = newB;
+                    pixels[i + 3] = newA;
+
+                    massiv.push([x+1,y],[x-1,y],[x,y-1],[x,y+1]);
+                    count++;
+               }
+
+               ctx.putImageData(imageData,0,0);
+
+               if (massiv.length > 0)
+               {
+                    requestAnimationFrame(step);
+               }
+          }
+
+          step();
+     }
+
+
+     function createLattice(ctx)
+     {
+          clearCTX(ctxIvTwo);
+          const width = ctx.canvas.width;
+          const height = ctx.canvas.height;
+          const step = width / distance;
+
+          for (let x = 0; x <= width; x += step)
+          {
+               drawLine(ctx, x, 0, x, height, 1, "#999", "butt");
+          }
+
+          for (let y = 0; y <= height; y += step)
+          {
+               drawLine(ctx, 0, y, width, y, 1, "#999", "butt");
+          }
+     }
+
+
+
+     function drawCircle(ctx,x1,y1,x2,y2,color,type)
+     {
+          ctx.beginPath();
+	  ctx.globalAlpha = alpha;
+          ctx.arc((x2 + x1) / 2,(y2 + y1) / 2,Math.hypot(x1 - x2,y1 - y2) / 2,0,Math.PI * 2);
+          if(type === "filled")
+          {
+               ctx.fillStyle = color;
+               ctx.fill();
+          }
+          if(type === "empty")
+          {
+               ctx.lineWidth = sizeBrush;
+               ctx.strokeStyle = color;
+               ctx.stroke();
+          }
+     }
+
+
+
+
+
+
+
+
+
+
+
+     canvas.addEventListener('mousedown',(e)=>{
+          ctx.beginPath();
+          ctx.moveTo(e.offsetX,e.offsetY);
+          isDrawing = true;
+          if(lineType || squareType || circleType)
+          {
+               lineXStart = e.offsetX;
+               lineYStart = e.offsetY;
+          }
+     });
+
+
+     canvas.addEventListener('mouseup',(e)=>{
+          if (!isDrawing) return;
+          isDrawing = false;
+          if(lineType)
+          {
+               drawLine(ctx,lineXStart,lineYStart,e.offsetX,e.offsetY,sizeBrush,colorBrush,cap);
+          }
+          if(squareType)
+          {
+               drawSquare(ctx,lineXStart,lineYStart,e.offsetX,e.offsetY,colorBrush);
+          }
+          if(circleType)
+          {
+               drawCircle(ctx,lineXStart,lineYStart,e.offsetX,e.offsetY,colorBrush,typeCircle)
+          }
+          clearCTX(ctxIv);
+     });
+
+     canvas.addEventListener('mouseleave',()=>{
+          isDrawing = false;
+          clearCTX(ctxIv);
+     });
+
+
+     colorInput.addEventListener('input',()=>{
+          colorBrush = colorInput.value;
+          console.log(colorInput.value);
+     });
+
+
+
+     canvas.addEventListener('mousemove',(e)=>{
+          if (!isDrawing) return;
+          clearCTX(ctxIv);
+          if(!cleaner && !lineType && !squareType && !typeFill && !circleType)draw(e.offsetX,e.offsetY,sizeBrush,colorBrush,cap);
+          if(cleaner)clearRect(e.offsetX,e.offsetY,sizeBrush);
+          if (lineType)
+          {
+               if(!traceMode)drawLine(ctxIv, lineXStart, lineYStart, e.offsetX, e.offsetY, sizeBrush, colorBrush, cap);
+               else drawLine(ctx, lineXStart, lineYStart, e.offsetX, e.offsetY, sizeBrush, colorBrush, cap);
+          }
+          if(squareType)
+          {
+               if(!traceMode)drawSquare(ctxIv,lineXStart,lineYStart,e.offsetX,e.offsetY,colorBrush);
+               else drawSquare(ctx,lineXStart,lineYStart,e.offsetX,e.offsetY,colorBrush);
+          }
+          if(circleType)
+          {
+               if(!traceMode)drawCircle(ctxIv,lineXStart,lineYStart,e.offsetX,e.offsetY,colorBrush,typeCircle);
+               else drawCircle(ctx,lineXStart,lineYStart,e.offsetX,e.offsetY,colorBrush,typeCircle);
+          }
+          
+     });
+
+
+     canvas.addEventListener('click',(e)=>{
+          if(typeFill) fill(e.offsetX,e.offsetY,colorBrush);
+     });
+
+
+</script>
+
+</body>
+</html>

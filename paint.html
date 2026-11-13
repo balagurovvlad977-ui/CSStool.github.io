@@ -60,7 +60,7 @@
           border-radius:10px;
           border:2px var(--hd--color) solid;
           width:80%;
-          position:absolute;
+          position:relative;
           left:15%;
           font-size:30px;
           backdrop-filter:blur(10px);
@@ -148,7 +148,7 @@
           display:flex;
           gap:40px;
           flex-direction:raw;
-          justify-content:space-between;
+          justify-content:center;
      }
 
 
@@ -164,22 +164,27 @@
 
      #color
      {
+          position:fixed;
+          left:0;
           width:100px;
           height:100px;
      }
 
      #panel
      {
+          position:fixed;
+          right:0;
           display:flex;
-          width:15vw;
+          width:200px;
           flex-wrap:wrap;
           justify-content:center;
-          gap:5px;
+          gap:15px;
           box-sizing:border-box;
           padding:10px;
           min-height:15vh;
           background-color:#888;
           border-radius:10px;
+          top:10px;
      }
 
      .panel-button
@@ -271,10 +276,23 @@
           pointer-events:none;
      }
 
-     #plan
+     #plan 
      {
-          position:relative;
+          height: 70vh; 
+          position: relative;
      }
+
+
+     button:hover
+     {
+          background-color:#777;
+     }
+
+     button:active
+     {
+          background-color:#555;
+     }
+
 
 
  
@@ -309,39 +327,32 @@
      </div>
 
      <div id="panel">
-          <button class="panel-button" data-type="lastik" onclick="cleaner = !cleaner;
-this.style.backgroundColor = cleaner ? '#555' : '#888';">
+          <button class="panel-button replace-button" data-type="cleaner" onclick="
+               setTypeBrush(this.dataset.type,this);">
                🧽🧽
           </button>
 
-          <button class="panel-button" data-type="line" onclick="lineType = !lineType;
-this.style.backgroundColor = lineType ? '#555' : '#888';">
+          <button class="panel-button replace-button" data-type="lineType" onclick="
+               setTypeBrush(this.dataset.type,this);">
                ||
           </button>
 
-          <button class="panel-button" data-type="line" onclick="typeFill = !typeFill;
-this.style.backgroundColor = typeFill ? '#555' : '#888';">
+          <button class="panel-button replace-button" data-type="typeFill" onclick="
+               setTypeBrush(this.dataset.type,this);">
                🪣🪣
           </button>
-     
-          <input type="range" min="1" max="500" value="5" id="sizeLine" oninput="sizeBrush = this.value;document.documentElement.style.setProperty('--size--line','\'' + this.value + '\'');"/>
 
-          <input type="range" min="1" max="500" value="5" id="distanceLine" oninput="distance = this.value;document.documentElement.style.setProperty('--distance--line','\'' + this.value + '\'');if(lattice)createLattice(ctxIvTwo);"/>
-
-          <input type="range" min="0" max="100" value="100" id="alpha" oninput="alpha = this.value / 100;document.documentElement.style.setProperty('--alpha','\'' + this.value + '\'');"/>
-
-
-          <button class="panel-button" data-type="line" onclick="squareType = !squareType;
-this.style.backgroundColor = squareType ? '#555' : '#888';">
+          <button class="panel-button replace-button" data-type="squareType" onclick=
+               "setTypeBrush(this.dataset.type,this);">
                🟫🟦
           </button>
 
-          <button class="panel-button" data-type="line" onclick="circleType = !circleType;
-this.style.backgroundColor = circleType ? '#555' : '#888';">
+          <button class="panel-button replace-button" data-type="circleType" onclick="
+               setTypeBrush(this.dataset.type,this);">
                🔴
           </button>
 
-          <button class="panel-button" data-type="line" onclick="
+          <button class="panel-button"  onclick="
                if(typeCircle === 'empty') typeCircle = 'filled';
                else typeCircle = 'empty';
                this.textContent = (typeCircle === 'empty') ? 'тип окр. - ⭕' : 'тип окр. - 🔴';
@@ -350,7 +361,7 @@ this.style.backgroundColor = circleType ? '#555' : '#888';">
           </button>
 
 
-          <button class="panel-button" style="background-color:#f00" data-type="line" onclick="traceMode = !traceMode;
+          <button class="panel-button" style="background-color:#f00" onclick="traceMode = !traceMode;
 this.style.backgroundColor = traceMode ? '#0f0' : '#f00';">
                Режим луча
           </button>
@@ -365,6 +376,29 @@ this.style.backgroundColor = traceMode ? '#0f0' : '#f00';">
           </button>
 
 
+          <input type="range" min="1" max="500" value="5" id="sizeLine" oninput="sizeBrush = this.value;document.documentElement.style.setProperty('--size--line','\'' + this.value + '\'');"/>
+
+          <input type="range" min="1" max="500" value="5" id="distanceLine" oninput="distance = this.value;document.documentElement.style.setProperty('--distance--line','\'' + this.value + '\'');if(lattice)createLattice(ctxIvTwo);"/>
+
+          <input type="range" min="0" max="100" value="100" id="alpha" oninput="alpha = this.value / 100;document.documentElement.style.setProperty('--alpha','\'' + this.value + '\'');"/>
+
+          <input type="number" placeholder="Размер по x" id="xCanvas" oninput="if ( this.value <= 0 ) this.value = 1" value="400">
+          <input type="number" placeholder="Размер по y" id="yCanvas" oninput="if ( this.value <= 0 ) this.value = 1" value="400">
+
+          <button class="panel-button" onclick="
+               const x = document.getElementById('xCanvas').value;
+               const y = document.getElementById('yCanvas').value;
+               resizePlan(x,y)">
+               Обновить размеры
+          </button>
+
+
+          <button class="panel-button" onclick="clearCTX(ctx);">
+               ОТЧИСТИТЬ ЛИСТОК
+          </button>
+
+
+
      </div>
 </div>
 
@@ -376,8 +410,11 @@ this.style.backgroundColor = traceMode ? '#0f0' : '#f00';">
 
 <script>
 
-     const canvas = document.getElementById('paint');
+     const planContainer = document.getElementById('plan');
      const colorInput = document.getElementById('color');
+     const replaceButton = document.querySelectorAll('.replace-button');
+
+     const canvas = document.getElementById('paint');
      const canvasInvisible = document.getElementById('invisibleFirst');
      const canvasInvisibleTwo = document.getElementById('invisibleTwo');
 
@@ -397,11 +434,11 @@ this.style.backgroundColor = traceMode ? '#0f0' : '#f00';">
 
      let traceMode = false;
 
-     let circleType = false;
-     let squareType = false;
-     let typeFill = false;
-     let lineType = false;
-     let cleaner = false;
+     var circleType = false;
+     var squareType = false;
+     var typeFill = false;
+     var lineType = false;
+     var cleaner = false;
 
      let isDrawing = false;
      let colorBrush = '#000';
@@ -454,6 +491,7 @@ this.style.backgroundColor = traceMode ? '#0f0' : '#f00';">
           if(!isDrawing)return;
           ctx.clearRect(x - size / 2,y - size/2,size,size);
      }
+
 
 
 
@@ -558,6 +596,52 @@ this.style.backgroundColor = traceMode ? '#0f0' : '#f00';">
      }
 
 
+     function setTypeBrush(replace,clickedButton)
+     {
+          replaceButton.forEach(item => {
+               if(item.dataset.type === replace)
+               {
+                    window[item.dataset.type] = !window[item.dataset.type];
+                    item.style.backgroundColor = window[item.dataset.type] ? '#555' : '#888';
+               }
+               else
+               {
+                    item.style.backgroundColor = '#888';
+                    window[item.dataset.type] = false;
+               }
+          });
+     }
+
+
+
+     function resizePlan(x,y) 
+     {
+          const tempCanvas = document.createElement('canvas');
+          tempCanvas.width = canvas.width;
+          tempCanvas.height = canvas.height;
+          tempCanvas.getContext('2d').drawImage(canvas, 0, 0);
+
+          canvas.width = x;
+          canvas.height = y;
+          canvasInvisible.width = x;
+          canvasInvisible.height = y;
+          canvasInvisibleTwo.width = x;
+          canvasInvisibleTwo.height = y;
+          if (lattice) createLattice(ctxIvTwo);
+
+          ctx.lineWidth = sizeBrush;
+          ctx.strokeStyle = colorBrush;
+          ctx.lineCap = cap;
+          ctx.globalAlpha = alpha;
+
+          if(tempCanvas.height > 0 || tempCanvas.width > 0)ctx.drawImage(tempCanvas, 0, 0);
+     }
+
+
+
+
+
+
 
 
 
@@ -640,6 +724,8 @@ this.style.backgroundColor = traceMode ? '#0f0' : '#f00';">
 
 
 </script>
+
+
 
 </body>
 </html>
